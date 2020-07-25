@@ -1,17 +1,17 @@
-import {ADD_MOVIES, ADD_FAVOURITES, REMOVE_FAVOURITES, SHOW_FAVOURITES} from '../actions'
+import { ADD_MOVIES, ADD_FAVOURITES, REMOVE_FAVOURITES, SHOW_FAVOURITES, ADD_MOVIE_TO_LIST, ADD_SEARCH_RESULT } from '../actions'
 import { combineReducers } from 'redux'
 
 
 
 const initialMoviesState = {
-list: [],
-favourites: [],
-showFavourites: false
+    list: [],
+    favourites: [],
+    showFavourites: false
 }
 
 export function movies(state = initialMoviesState, action) {
 
-    
+
     // if(action.type === ADD_MOVIES){
     //     return {
     //         ...state,
@@ -22,35 +22,41 @@ export function movies(state = initialMoviesState, action) {
 
     console.log("Movies Reducer");
 
-    switch(action.type){
+    switch (action.type) {
 
         case ADD_MOVIES:
             return {
-                        ...state,
-                        list: action.movies
-                    }
+                ...state,
+                list: action.movies
+            }
 
         case ADD_FAVOURITES:
-            return{
+            return {
                 ...state,
-                favourites:[action.movie, ...state.favourites]
+                favourites: [action.movie, ...state.favourites]
             }
 
         case REMOVE_FAVOURITES:
-            const filteredArray= state.favourites.filter(
-                movie=> movie.Title !== action.movie.Title
+            const filteredArray = state.favourites.filter(
+                movie => movie.Title !== action.movie.Title
             );
 
-            return{
+            return {
                 ...state,
-                favourites:filteredArray
+                favourites: filteredArray
             }
-        
-            case SHOW_FAVOURITES:
-                return{
-                    ...state,
-                    showFavourites: action.val
-                }
+
+        case SHOW_FAVOURITES:
+            return {
+                ...state,
+                showFavourites: action.val
+            }
+
+        case ADD_MOVIE_TO_LIST:
+            return {
+                ...state,
+                list: [action.movie, ...state.list]
+            }
         default:
             return state;
 
@@ -58,12 +64,30 @@ export function movies(state = initialMoviesState, action) {
 }
 
 const initialSearchState = {
-    result: {}
+    result: {},
+    showSearchResults: false
 }
 
-export function search(state = initialSearchState, action){
+export function search(state = initialSearchState, action) {
     console.log("Search Reducer");
-    return state;
+
+    switch (action.type) {
+        case ADD_SEARCH_RESULT:
+            return {
+                ...state,
+                result: action.movie,
+                showSearchResults: true
+            }
+
+        case ADD_MOVIE_TO_LIST:
+            return {
+                ...state,
+                showSearchResults: false
+            }
+        default:
+            return state;
+    }
+
 }
 
 

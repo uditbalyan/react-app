@@ -3,6 +3,7 @@ import { data } from '../data';
 import Navbar from './Navbar';
 import MovieCard from './MovieCard';
 import { addMovies, showFavourites } from '../actions';
+import {StoreContext} from '../index';
 
 class App extends React.Component {
 
@@ -25,7 +26,7 @@ class App extends React.Component {
 
   isMovieFavourite =(movie) =>{
 
-    const {movies}= this.props.store.getState();
+    const {movies}= this.props.store.getState(); //object destrucuting
     const {favourites} =movies;
 
     const index =favourites.indexOf(movie);
@@ -43,7 +44,7 @@ class App extends React.Component {
   }
 
   render() {
-    const {movies}= this.props.store.getState(); // {movies:[], search:[]}
+    const {movies, search}= this.props.store.getState(); // {movies:[], search:[]}
     const {list, favourites, showFavourites} = movies; 
     console.log('Render', this.props.store.getState());
 
@@ -51,7 +52,7 @@ class App extends React.Component {
 
     return (
       <div className="App">
-        <Navbar />
+        <Navbar search={search} />
         <div className="main">
           <div className="tabs">
             <div className={`tab ${showFavourites ? '' : 'active-tabs'}`} onClick={()=> this.onChangeTab(false)}>Movies</div>
@@ -61,7 +62,7 @@ class App extends React.Component {
           <div className="list">
             {displayMovies.map((movie, index) => (
               <MovieCard movie={movie}
-               key={`movies-${index}`}
+                key={`movies-${index}`}
                 dispatch={this.props.store.dispatch}
                 isFavourite={this.isMovieFavourite(movie)}
                 />
@@ -74,4 +75,16 @@ class App extends React.Component {
   }
 }
 
-export default App;
+class AppWrapper extends React.Component{
+  render(){
+    return(
+      <StoreContext.Consumer>
+        { (store) =>{
+            return <App store={store}/>;
+        } }
+      </StoreContext.Consumer>
+    );
+  }
+}
+
+export default AppWrapper;
